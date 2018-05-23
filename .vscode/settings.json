@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "C:\\Users\\fincherj\\.virtualenvs\\Galaga-KbiS5Wi3\\scripts\\python.exe",
+    "python.venvPath": "C:\\Users\\fincherj\\.virtualenvs",
+    "python.linting.enabled": false,
+    "python.formatting.provider": "autopep8",
+}
