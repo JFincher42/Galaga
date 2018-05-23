@@ -7,6 +7,7 @@ import sprite
 import random
 import os
 import math
+from vectors import Point, Vector
 
 # Color constants
 BLACK = (  0,   0,   0)
@@ -55,7 +56,9 @@ def setup():
 def game_loop():
     global ship, path
 
-    angle = 0.0
+    # The basic movement vector
+    movement_vector = Vector(0.1 * c.get_time, 0)
+
     playing = True
     while playing:
         for event in pygame.event.get():
@@ -68,14 +71,16 @@ def game_loop():
 
         # Constraing the display angles to 15 degree increments
         # This matches the display of sprites in the game
-        display_angle = 15 * (int(angle)//15)
+        #display_angle = 15 * (int(angle)//15)
+        display_angle = angle
+        movement_vector = movement_vector.rotate(.1*c.get_time())
 
         # How far to move each frame?
         dist = .1
 
         # Figure out the distance we moved along each component of the vector
-        x_part = math.cos(math.radians(angle)) * dist * c.get_time()
-        y_part = -math.sin(math.radians(angle)) * dist * c.get_time()  # Because y-axis is flipped
+        #x_part = math.cos(math.radians(angle)) * dist * c.get_time()
+        #y_part = -math.sin(math.radians(angle)) * dist * c.get_time()  # Because y-axis is flipped
 
         # Move the sprite towards the point
         ship.center_x += x_part

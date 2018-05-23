@@ -15,42 +15,42 @@ class Point(object):
 
     def __sub__(self,point):
         """ Return a Point instance as the displacement of two points. """
-	if type(point) is Point:
-        	return self.substract(point)
-	else:
-		raise TypeError
+        if type(point) is Point:
+            return self.substract(point)
+        else:
+            raise TypeError
 
     def __add__(self,point):
-	if type(point) is Point:
-		if self.z and point.z:
-        		return Point(point.x + self.x, point.y + self.y, point.z + self.z)
-		elif self.z:
-			return Point(point.x + self.x, point.y + self.y, self.z)
-		elif point.z:
-			return Point(point.x + self.x, point.y + self.y, point.z)
-		else:
-			return Point(point.x + self.x, point.y + self.y)
-	else:
-		raise TypeError
+        if type(point) is Point:
+            if self.z and point.z:
+                return Point(point.x + self.x, point.y + self.y, point.z + self.z)
+            elif self.z:
+                return Point(point.x + self.x, point.y + self.y, self.z)
+            elif point.z:
+                return Point(point.x + self.x, point.y + self.y, point.z)
+            else:
+                return Point(point.x + self.x, point.y + self.y)
+        else:
+            raise TypeError
 
     def substract(self, point):
         """ Return a Point instance as the displacement of two points. """
-	if type(point) is Point:
-        	return Point(point.x - self.x, point.y - self.y, point.z - self.z)
-	else:
-		raise TypeError
+        if type(point) is Point:
+            return Point(point.x - self.x, point.y - self.y, point.z - self.z)
+        else:
+            raise TypeError
 
     @classmethod
     def from_list(cls, l):
         """ Return a Point instance from a given list """
-	if len(l) == 3:
-        	x, y, z = map(float, l)
-        	return cls(x, y, z)
-	elif len(l) == 2:
-		x, y = map(float, l)
-		return cls(x, y)
-	else:
-		raise AttributeError
+        if len(l) == 3:
+            x, y, z = map(float, l)
+            return cls(x, y, z)
+        elif len(l) == 2:
+            x, y = map(float, l)
+            return cls(x, y)
+        else:
+            raise AttributeError
 
 class Vector(Point):
     """
@@ -64,9 +64,9 @@ class Vector(Point):
     """
 
     def __init__(self, x, y, z=0):
-	'''Vectors are created in rectangular coordniates
-	to create a vector in spherical or cylindrical
-	see the class methods'''
+        '''Vectors are created in rectangular coordniates
+        to create a vector in spherical or cylindrical
+        see the class methods'''
         super(Vector, self).__init__(x, y, z)
 
     def __add__(self,anotherVector):
@@ -105,13 +105,13 @@ class Vector(Point):
         """ Return a Vector instance as the product of the vector and a real
             number. """
 
-        return self.from_list([x*number for x in self.vector])
+        return self.from_list([x*number for x in [self.x, self.y, self.z]])
 
     def magnitude(self):
         """ Return magnitude of the vector. """
 
         return (math.sqrt(reduce(lambda x, y: x+y,
-                [x**2 for x in self.vector])))
+                [x**2 for x in [self.x,self.y,self.z]])))
 
     def sum(self, vector):
         """ Return a Vector instance as the vector sum of two vectors. """
@@ -134,8 +134,8 @@ class Vector(Point):
             return (self.magnitude() * vector.magnitude() *
                     math.degrees(math.cos(theta)))
         return (reduce(lambda x, y: x+y,
-                [x*vector.vector[i]
-                 for i,x in enumerate(self.vector)]))
+                [self.x*vector.x, self.y*vector.y, self.z*vector.z]))
+
 
     def cross(self, vector):
         """ Return a Vector instance as the cross product of two vectors """
@@ -145,17 +145,12 @@ class Vector(Point):
                       (self.x * vector.y - self.y * vector.x))
 
     def unit(self):
-	""" Return a Vector instance of the unit vector """
-
-	return Vector((self.x / self.magnitude()),
-		      (self.y / self.magnitude()),
-		      (self.z / self.magnitude()))
+        """ Return a Vector instance of the unit vector """
+        return Vector((self.x / self.magnitude()), (self.y / self.magnitude()), (self.z / self.magnitude()))
 
     def angle(self, vector):
         """ Return the angle between two vectors in degrees. """
-
-        return (math.degrees(math.acos((self.dot(vector) / (self.magnitude() *
-                vector.magnitude())))))
+        return (math.degrees(math.acos((self.dot(vector) / (self.magnitude() * vector.magnitude())))))
 
     def parallel(self, vector):
         """ Return True if vectors are parallel to each other. """
@@ -227,10 +222,10 @@ class Vector(Point):
 
     @classmethod
     def spherical(cls, mag, theta, phi=0):
-	'''Returns a Vector instance from spherical coordinates'''
-	return cls(mag * math.sin(phi) * math.cos(theta), mag * math.sin(phi) * math.sin(theta), mag * math.cos(phi))
+        '''Returns a Vector instance from spherical coordinates'''
+        return cls(mag * math.sin(phi) * math.cos(theta), mag * math.sin(phi) * math.sin(theta), mag * math.cos(phi))
 
     @classmethod
     def cylindrical(cls, mag, theta, z=0):
-	'''Returns a Vector instance from cylindircal coordinates'''
-	return cls(mag * math.cos(theta), mag * math.sin(theta), z)
+        '''Returns a Vector instance from cylindircal coordinates'''
+        return cls(mag * math.cos(theta), mag * math.sin(theta), z)
