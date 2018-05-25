@@ -50,7 +50,12 @@ def setup():
     # The ship sprite
     ship = sprite.Sprite(os.path.join("images","Galaga ship.png"), WIDTH+50, HEIGHT-100)
     ship.scale = SCALE
-    path = [Point(25, HEIGHT), Point(WIDTH, 25), Point(SCALE*WIDTH-25, HEIGHT), Point(WIDTH, SCALE*HEIGHT-25)]
+
+    # Initial velocity is to the left
+    ship.velocity = Vector(-1,0)
+
+    # List of way points
+    path = [Vector(25, HEIGHT), Vector(WIDTH, 25), Vector(SCALE*WIDTH-25, HEIGHT), Vector(WIDTH, SCALE*HEIGHT-25)]
 
 def sprite_within(sprite, point, threshold):
     """
@@ -93,13 +98,22 @@ def game_loop():
                 next_point = 0
 
         # Figure out our new direction vector
-        new_center = Point.from_list(ship.center)
-        ship.direction = Vector.from_points(Point.from_list(ship.center), path[next_point]).unit()
-        ship.speed = 0.1
-        new_direction = ship.direction.multiply(ship.speed*c.get_time())
-        ship.center_x += new_direction.x
-        ship.center_y += new_direction.y
-        ship.angle = ship.direction.angle(zero_degrees)
+        desired_velocity = Vector.from_list(ship.center) - path[next_point]
+        desired_velocity = desired_velocity.unit().multiply(0.1 * c.get_time())
+        steering_force = Vector.multiply(ship.velocity - desired_velocity, 0.1)
+        ship.velocity += steering_force
+        if ship.velocity.magnitude() > 5:
+            ship.velocity = ship.velocity.unit().multiply(5)
+
+        #ship.direction = Vector.from_points(Point.from_list(ship.center), path[next_point]).unit()
+        #new_direction = ship.direction.multiply(ship.speed*c.get_time())
+        ship.center_x += ship.velocity.x
+        ship.center_y += ship.velocity.y
+        new_angle = ship.velocity.angle(zero_degrees)
+        if ship.velocity.y < 0:
+            new_angle *= -1
+        ship.angle = (new_angle+270)%360
+
         # Move the sprite towards the point
         ship.scale = SCALE
 

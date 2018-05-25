@@ -57,7 +57,8 @@ def game_loop():
     global ship, path
 
     # The basic movement vector
-    movement_vector = Vector(0.1 * c.get_time, 0)
+    movement_vector = Vector(0.1 * c.get_time(), 0)
+    angle = 0
 
     playing = True
     while playing:
@@ -79,15 +80,15 @@ def game_loop():
         dist = .1
 
         # Figure out the distance we moved along each component of the vector
-        #x_part = math.cos(math.radians(angle)) * dist * c.get_time()
-        #y_part = -math.sin(math.radians(angle)) * dist * c.get_time()  # Because y-axis is flipped
+        x_part = math.cos(math.radians(angle)) * dist * c.get_time()
+        y_part = -math.sin(math.radians(angle)) * dist * c.get_time()  # Because y-axis is flipped
 
         # Move the sprite towards the point
         ship.center_x += x_part
         ship.center_y += y_part
 
         # Rotate along the constrained angle
-        ship.angle = display_angle-90  # Correction because default icon is rotated
+        ship.angle = (display_angle+270)%360  # Correction because default icon is rotated
         ship.scale = SCALE
 
         # Now we can draw everything...
